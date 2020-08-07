@@ -1,0 +1,37 @@
+{
+  "name": "finchatbot-monolithic",
+  "version": "1.0.0",
+  "description": "this is monolithic architecture based financial chatbot application",
+  "main": "server.js",
+  "scripts": {
+    "test": "",
+    "start": "node ./src/bin/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shakti45/finchatbot-chatbotMonolithic.git"
+  },
+  "keywords": [
+    "chatbot",
+    "monolithic",
+    "balance",
+    "check",
+    "admin"
+  ],
+  "author": "Shakti - one and only",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shakti45/finchatbot-chatbotMonolithic/issues"
+  },
+  "homepage": "https://github.com/shakti45/finchatbot-chatbotMonolithic#readme",
+  "dependencies": {
+    "@nlpjs/basic": "^4.9.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "express-socket.io-session": "^1.3.5",
+    "mongodb": "^3.6.0",
+    "socket.io": "^2.3.0",
+    "winston": "^3.3.3"
+  }
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daario Finance Solution</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <ul class="pages">
+    <li class="chat page">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+      <input class="inputMessage" placeholder="Type here..."/>
+      <button class="sendmsg" type="submit">Send</button>
+    </li>
+    <li class="login page">
+      <div class="form">
+        <h3 class="title">Username</h3>
+        <input class="usernameInput" value="" placeholder="abc@gmail.com" type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+        <button class="submitUsername" type="submit">SUBMIT</button>
+      </div>
+    </li>
+  </ul>
+
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
