@@ -20,7 +20,7 @@ $(function() {
     var connected = false;
     var $currentInput = $usernameInput.focus();
   
-    var socket = io('http://127.0.0.1:3000');
+    var socket = io();
   
     // Sets the client's username
     const setUsername = () => {

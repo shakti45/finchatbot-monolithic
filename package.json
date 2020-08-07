@@ -4,7 +4,6 @@
   "description": "this is monolithic architecture based financial chatbot application",
   "main": "server.js",
   "scripts": {
-    "test": "",
     "start": "node ./src/bin/server.js"
   },
   "repository": {
