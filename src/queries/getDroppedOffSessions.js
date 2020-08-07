@@ -23,14 +23,33 @@ let getDroppedOffSessions = async()=> {
             {
                 '$unwind': '$conversations'
             },
-            {
-                '$match' : {'conversations.droppedOff':true}
+            {   '$sort':{
+                    'conversations.timestamp':1
+                }
             },
             {
                 '$group': {
-                    '_id': '$userid',
-                    'count' : {'$sum':1}           
+                    '_id': {'userid':'$userid','sessionID':'$conversations.sessionID'},
+                    'sessionInfo':{
+                        '$last': {
+                            'sessionID':'$conversations.sessionID',
+                            'event':'$conversations.event',
+                            'status':'$conversations.sessionStatus',
+                            'droppedOff':'$conversations.droppedOff'
+                        }
                     
+                    }
+                }
+            },
+            {
+                '$match':{
+                    'sessionInfo.droppedOff':true
+                    }
+            },
+            {
+                '$group' : {
+                    '_id':'$_id.userid',
+                    'count':{'$sum':1}
                     }
             }
         ]).toArray()
