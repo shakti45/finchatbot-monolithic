@@ -1,6 +1,7 @@
 const {getActionService} = require('../services')
 let {userService} = require('../services')
-var {botname} = require('../vars') 
+let {getRequestFormat,getResponseFormat, getLogFormat} = require('../helper/Formatter')
+// let formatter = new Format()
 module.exports = function(io) {
   var timer
   var numUsers = 0
@@ -13,64 +14,31 @@ module.exports = function(io) {
       // we tell the client to execute 'new message'
       
       clearTimeout(timer)
+      console.log('event',socket)
       
 
 
       console.log('username',data,socket.handshake.session.username)
 
-      let request = {}
-      request['from'] = socket.handshake.session.username
-      request['to'] = botname
-      request['text'] = data
-      request['timestamp'] = new Date()
-      request['sessionID'] = await userService.getSession(socket.handshake.session.username)
-      request['sessionStatus'] = true
-      request['event'] = 'create Message'
+      let request = await getRequestFormat('create Message',data,socket)
       await userService.saveConversation(socket.handshake.session.username,request)    
       
       timer = setTimeout(
         async(data = 'Is there anything else I can do to help you')=>{
-          let response = {}
-          response =  await getActionService.getAction(String(data))
-          response['template'] = response['intent'].split('.')[0]
-          let result = await userService.getIntentResult(response['intent'],String(socket.handshake.session.username))
-          response['data'] = (result) ? result : null
-          response['sessionID'] = await userService.getSession(socket.handshake.session.username)
-          response['timestamp'] = new Date()
-          response['sessionStatus'] = true
-          response['event'] = 'new Message'
-          response['from'] = botname
-          response['to'] = String(socket.handshake.session.username)
+          
+          let response = await getResponseFormat('new Message',data,socket)
           await userService.saveConversation(socket.handshake.session.username,response)
-          console.log('type of response', typeof response)
-          // return response
       
       
       
           socket.emit('new message', response);
         },10000);
-      // })
-      let response = {}
 
-      // response['username'] = response['to']
       
-      
-      response =  await getActionService.getAction(String(data))
-      response['template'] = response['intent'].split('.')[0]
-      let result = await userService.getIntentResult(response['intent'],String(socket.handshake.session.username))
-      response['data'] = (result) ? result : null
-      response['sessionID'] = await userService.getSession(socket.handshake.session.username)
-      response['timestamp'] = new Date()
-      response['sessionStatus'] = true
-      response['event'] = 'new Message'
-      response['from'] = botname
-      response['to'] = String(socket.handshake.session.username)
+
+      let response = await getResponseFormat('new Mesaage',data,socket)
       await userService.saveConversation(socket.handshake.session.username,response)
-      console.log('type of response', typeof response)
-      // return response
-
-  
-
+    
       socket.emit('new message', response);
     });
 
@@ -81,23 +49,19 @@ module.exports = function(io) {
       console.log('ónboard')
 
       // we store the username in the socket session for this client
-      socket.username = username;
-      // socket.id = await userService.getSession(socket.handshake.session.username)
+      socket.username = username
       socket.handshake.session.username = username;
-      socket.handshake.session.save();
-      console.log('starting session',socket.handshake.session.username)
-      let response = {}
-      response['sessionID'] = await userService.getSession(socket.handshake.session.username)
-      response['timestamp'] = new Date()
-      response['sessionStatus'] = true
-      response['event'] = 'add user'
-      await userService.saveConversation(socket.handshake.session.username,response)
+      socket.id = await userService.getSession(socket.handshake.session.username)
+      socket.handshake.session.id = socket.id
+      socket.handshake.session.save()
+      let log = await getLogFormat('add user',socket,true)
+      await userService.saveConversation(socket.handshake.session.username,log)
       ++numUsers;
       addedUser = true;
       socket.emit('login', {
         numUsers: numUsers
-      });
-    });
+      })
+    })
 
     // when the client emits 'typing', we broadcast it to others
 
@@ -106,23 +70,13 @@ module.exports = function(io) {
       if (addedUser) {
         --numUsers;
         if (socket.handshake.session.username) {
-          let response = {}
-          response['sessionID'] = await userService.getSession(socket.handshake.session.username)
-          response['timestamp'] = new Date()
-          response['sessionStatus'] = false
-          response['event'] = 'disconnect'
-          let lastEvent = await userService.getLastEvent(socket.handshake.session.username,response['sessionID'])
-          // console.log('last event',lastEvent)
-          if(lastEvent['event']=='add user'&&lastEvent['sessionStatus']==true){
-            response['droppedOff'] = true
-          }
-          await userService.saveConversation(socket.handshake.session.username,response) 
+          let log= await getLogFormat('disconnect',socket,false)
+          await userService.saveConversation(socket.handshake.session.username,log) 
           await userService.saveSession(socket.handshake.session.username)
           delete socket.handshake.session.username
           socket.handshake.session.save();
       }
-      console.log('closed session',socket.handshake.session)
       }
-    });
-  });
+    })
+  })
 }
