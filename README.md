@@ -5,7 +5,7 @@ This is a financial chatbot project. Developed as part of tech assessment proces
 ![APP DEMO](./assets/demo.webm)
 
 ## Flow
-![APP FLOW](./assets/FinchatBot_Flow.png)
+![APP FLOW](./assets/FinChatBot_Flow.png)
 
 ``1) chatUI- This is the UI service which will interact with user, connect to server socket.
 
