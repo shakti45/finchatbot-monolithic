@@ -6,6 +6,5 @@ let errorHandler = (err, req, res, next) => {
     }
     logger.log('error',err.message)
     res.status(err.statusCode).send(err.message)
-  }
-
-  module.exports = errorHandler
+}
+module.exports = errorHandler

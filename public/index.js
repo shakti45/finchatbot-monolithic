@@ -228,7 +228,6 @@ $(function() {
       log(message, {
         prepend: true
       });
-     // addParticipantsMessage(data);
     });
   
     // Whenever the server emits 'new message', update the chat body
@@ -239,13 +238,11 @@ $(function() {
     // Whenever the server emits 'user joined', log it in the chat body
     socket.on('user joined', (data) => {
       log(data.username + ' joined');
-     // addParticipantsMessage(data);
     });
   
     // Whenever the server emits 'user left', log it in the chat body
     socket.on('user left', (data) => {
       log(data.username + ' left');
-     // addParticipantsMessage(data);
     });
   
   
